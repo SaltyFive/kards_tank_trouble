@@ -10,5 +10,14 @@ class Tank:
         
         self.rect.midbottom = self.screen_rect.midbottom
         
-    def update(self):
+        self.moving_forward = False
+        self.moving_backward = False
+    def blit(self):
         self.screen.blit(self.image,self.rect)
+        self.moving()
+    
+    def moving(self):
+        if self.moving_forward:
+            self.rect.y -= 1
+        if self.moving_backward:
+            self.rect.y += 1
