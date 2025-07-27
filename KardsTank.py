@@ -21,15 +21,25 @@ class KardsTank:
                         self.tank.moving_forward = True
                     elif event.key == pygame.K_s:
                         self.tank.moving_backward = True
+                        
+                    if event.key == pygame.K_a:
+                        self.tank.turn_left = True
+                    elif event.key == pygame.K_d:
+                        self.tank.turn_right = True
                 
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_w:
                         self.tank.moving_forward = False
                     elif event.key == pygame.K_s:
                         self.tank.moving_backward = False
+                        
+                    if event.key == pygame.K_a:
+                        self.tank.turn_left = False
+                    elif event.key == pygame.K_d:
+                        self.tank.turn_right = False
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        self.tank.blit()
+        self.tank.update()
         pygame.display.flip()
     
     def run_game(self):
