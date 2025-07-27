@@ -21,7 +21,7 @@ class Tank(pygame.sprite.Sprite):
         self.turn_left = False
         self.turn_right = False
         
-        self.velocity = 1
+        self.velocity = 5
                 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -49,9 +49,9 @@ class Tank(pygame.sprite.Sprite):
         if self.turn_left and self.turn_right:
             self.rotate_speed = 0
         elif self.turn_left:
-            self.rotate_speed = 0.5
+            self.rotate_speed = 2
         elif self.turn_right:
-            self.rotate_speed = -0.5
+            self.rotate_speed = -2
         else:
             self.rotate_speed = 0
         

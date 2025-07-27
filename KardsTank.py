@@ -12,6 +12,7 @@ class KardsTank:
         self.screen = pygame.display.set_mode(self.settings.screen_size)
         self.tank = Tank(self,'Ger')
         pygame.display.set_caption("这个,,游戏。那。坦克,打4对面?对面。。是,你的机油?用wasd 上下左右。冻起来,然后j和,数字0打.")
+        self.clock = pygame.time.Clock()
     def _check_events(self):
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -41,6 +42,8 @@ class KardsTank:
         self.screen.fill(self.settings.bg_color)
         self.tank.update()
         pygame.display.flip()
+        
+        self.clock.tick(self.settings.FPS)
     
     def run_game(self):
         '''开始游戏的函数'''
