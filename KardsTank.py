@@ -11,7 +11,11 @@ class KardsTank:
         self.settings = Settings()
         
         self.screen = pygame.display.set_mode(self.settings.screen_size)
-        self.tank = Tank(self,'Ger')
+        self.player1 = Tank(self,'Ger')
+        self.player2 = Tank(self,'Eng')
+        self.players = pygame.sprite.Group()
+        self.players.add(self.player1)
+        self.players.add(self.player2)
         self.bullets = pygame.sprite.Group()
         pygame.display.set_caption("这个,,游戏。那。坦克,打4对面?对面。。是,你的机油?用wasd 上下左右。冻起来,然后j和,数字0打.")
         self.clock = pygame.time.Clock()
@@ -25,30 +29,50 @@ class KardsTank:
                     self._check_keyup(event)
     def _check_keydown(self,event):
         if event.key == pygame.K_w:
-            self.tank.moving_forward = True
+            self.player1.moving_forward = True
         elif event.key == pygame.K_s:
-            self.tank.moving_backward = True
+            self.player1.moving_backward = True
+        
+        if event.key == pygame.K_UP:
+            self.player2.moving_forward = True
+        elif event.key == pygame.K_DOWN:
+            self.player2.moving_backward = True
         
         if event.key == pygame.K_a:
-            self.tank.turn_left = True
+            self.player1.turn_left = True
         elif event.key == pygame.K_d:
-            self.tank.turn_right = True
+            self.player1.turn_right = True
+        
+        if event.key == pygame.K_LEFT:
+            self.player2.turn_left = True
+        elif event.key == pygame.K_RIGHT:
+            self.player2.turn_right = True
                         
         if event.key == pygame.K_j:
-            self._fire_bullet(self.tank)
+            self._fire_bullet(self.player1)
+        if event.key == pygame.K_KP0:
+            self._fire_bullet(self.player2)
     def _check_keyup(self,event):
         if event.key == pygame.K_w:
-            self.tank.moving_forward = False
+            self.player1.moving_forward = False
         elif event.key == pygame.K_s:
-            self.tank.moving_backward = False
+            self.player1.moving_backward = False
+        if event.key == pygame.K_UP:
+            self.player2.moving_forward = False
+        elif event.key == pygame.K_DOWN:
+            self.player2.moving_backward = False
                         
         if event.key == pygame.K_a:
-            self.tank.turn_left = False
+            self.player1.turn_left = False
         elif event.key == pygame.K_d:
-            self.tank.turn_right = False
+            self.player1.turn_right = False
+        if event.key == pygame.K_LEFT:
+            self.player2.turn_left = False
+        elif event.key == pygame.K_RIGHT:
+            self.player2.turn_right = False
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        self.tank.update()
+        self.players.update()
         self.bullets.update()
         self._update_bullet()
         pygame.display.flip()
