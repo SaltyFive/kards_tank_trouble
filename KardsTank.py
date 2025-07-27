@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from tank import Tank
+from bullet import Bullet
 class KardsTank:
     '''管理游戏资源及其行为'''
     def __init__(self):
@@ -11,6 +12,7 @@ class KardsTank:
         
         self.screen = pygame.display.set_mode(self.settings.screen_size)
         self.tank = Tank(self,'Ger')
+        self.bullets = pygame.sprite.Group()
         pygame.display.set_caption("这个,,游戏。那。坦克,打4对面?对面。。是,你的机油?用wasd 上下左右。冻起来,然后j和,数字0打.")
         self.clock = pygame.time.Clock()
     def _check_events(self):
@@ -18,33 +20,49 @@ class KardsTank:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
-                        self.tank.moving_forward = True
-                    elif event.key == pygame.K_s:
-                        self.tank.moving_backward = True
-                        
-                    if event.key == pygame.K_a:
-                        self.tank.turn_left = True
-                    elif event.key == pygame.K_d:
-                        self.tank.turn_right = True
-                
+                    self._check_keydown(event)
                 elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_w:
-                        self.tank.moving_forward = False
-                    elif event.key == pygame.K_s:
-                        self.tank.moving_backward = False
+                    self._check_keyup(event)
+    def _check_keydown(self,event):
+        if event.key == pygame.K_w:
+            self.tank.moving_forward = True
+        elif event.key == pygame.K_s:
+            self.tank.moving_backward = True
+        
+        if event.key == pygame.K_a:
+            self.tank.turn_left = True
+        elif event.key == pygame.K_d:
+            self.tank.turn_right = True
                         
-                    if event.key == pygame.K_a:
-                        self.tank.turn_left = False
-                    elif event.key == pygame.K_d:
-                        self.tank.turn_right = False
+        if event.key == pygame.K_j:
+            self._fire_bullet(self.tank)
+    def _check_keyup(self,event):
+        if event.key == pygame.K_w:
+            self.tank.moving_forward = False
+        elif event.key == pygame.K_s:
+            self.tank.moving_backward = False
+                        
+        if event.key == pygame.K_a:
+            self.tank.turn_left = False
+        elif event.key == pygame.K_d:
+            self.tank.turn_right = False
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         self.tank.update()
+        self.bullets.update()
+        self._update_bullet()
         pygame.display.flip()
         
         self.clock.tick(self.settings.FPS)
-    
+    def _fire_bullet(self,belong_to):
+        new_bullet = Bullet(self,belong_to)
+        self.bullets.add(new_bullet)
+    def _update_bullet(self):
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
+        for bullet in self.bullets.copy():
+            if pygame.time.get_ticks() - bullet.create_time >= 3000:
+                self.bullets.remove(bullet)
     def run_game(self):
         '''开始游戏的函数'''
         while 1:

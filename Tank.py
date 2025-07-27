@@ -4,8 +4,10 @@ from math import *
 class Tank(pygame.sprite.Sprite):
     '''管理坦克的类'''
     def __init__(self,kt_game,image):
+        super().__init__()
         self.screen = kt_game.screen
         self.screen_rect = kt_game.screen.get_rect()
+        self.settings = kt_game.settings
         
         self.origin_image = pygame.image.load(f'images/{image}.png').convert_alpha()
         self.image = self.origin_image
@@ -21,7 +23,7 @@ class Tank(pygame.sprite.Sprite):
         self.turn_left = False
         self.turn_right = False
         
-        self.velocity = 5
+        self.velocity = 2
                 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -41,11 +43,13 @@ class Tank(pygame.sprite.Sprite):
         self.x += dx
         self.y += dy
         
+        self.x = max(0, min(self.x, self.screen_rect.width - self.rect.width))
+        self.y = max(0, min(self.y, self.screen_rect.height - self.rect.height))
+        
         self.rect.x = int(self.x)
         self.rect.y = int(self.y)
         
     def rotate(self):
-        print(self.angle)
         if self.turn_left and self.turn_right:
             self.rotate_speed = 0
         elif self.turn_left:
