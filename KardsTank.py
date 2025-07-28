@@ -89,11 +89,6 @@ class KardsTank:
                 bullet.alive = False
             if bullet.alive == False:
                 self.bullets.remove(bullet)
-    def run_game(self):
-        '''开始游戏的函数'''
-        while 1:
-            self._check_events()
-            self._update_screen()
     def _check_tanks_collision(self):
         for tank1 in self.players:
             for tank2 in self.players:
@@ -118,10 +113,15 @@ class KardsTank:
                 if bullet.belong_to != tank:
                     print(f'玩家{tank.id}被{bullet.belong_to.id}击中')
                     bullet.alive = False
-                elif pygame.time.get_ticks() - bullet.create_time > 200:
+                elif pygame.time.get_ticks() - bullet.create_time > 100:
                     print(f'玩家{tank.id}被自己击中')
                     bullet.alive = False
-
+    
+    def run_game(self):
+        '''开始游戏的函数'''
+        while 1:
+            self._check_events()
+            self._update_screen()
 if __name__ == '__main__':
     kt = KardsTank()
     kt.run_game()

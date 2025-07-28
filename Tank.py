@@ -24,8 +24,12 @@ class Tank(pygame.sprite.Sprite):
         self.turn_left = False
         self.turn_right = False
         
-        self.velocity = self.settings.tank_speed
+        self.max_speed = self.settings.tank_max_speed
+        self.acc = self.settings.tank_acc
+        self.speed = 0
+        self.f_acc = self.settings.friction_acc
         self.tank_collision = False
+        self.is_moving = False
                 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -33,19 +37,38 @@ class Tank(pygame.sprite.Sprite):
         self.dy = 0
     def moving(self):
         if self.moving_forward and self.moving_backward:
-            speed = 0
+            self.is_moving = False
+            if self.speed > 0:
+                acc = -self.f_acc
+            elif self.speed < 0:
+                acc = self.f_acc
+            else:
+                acc = 0
         elif self.moving_backward:
-            speed = -self.velocity
+            acc = -self.acc
+            self.is_moving = True
         elif self.moving_forward:
-            speed = self.velocity
+            acc = self.acc
+            self.is_moving = True
         else:
-            speed = 0
+            self.is_moving = False
+            if self.speed > 0:
+                acc = -self.f_acc
+            elif self.speed < 0:
+                acc = self.f_acc
+            else:
+                acc = 0
+        self.speed += acc
+        self.speed = max(min(self.speed,self.max_speed),-self.max_speed)
+        
+        
+        print(self.speed,acc)
         if self.tank_collision:
-            self.dx = (speed * cos(radians(self.angle)))/2
-            self.dy = (-(speed * sin(radians(self.angle))))/2
+            self.dx = (self.speed * cos(radians(self.angle)))/2
+            self.dy = (-(self.speed * sin(radians(self.angle))))/2
         else:
-            self.dx = speed * cos(radians(self.angle))
-            self.dy = -(speed * sin(radians(self.angle)))
+            self.dx = self.speed * cos(radians(self.angle))
+            self.dy = -(self.speed * sin(radians(self.angle)))
         
         self.x += self.dx
         self.y += self.dy
