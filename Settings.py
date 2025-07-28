@@ -8,13 +8,15 @@ class Settings:
         self.bg_color = 230,230,230
         
         self.text_color = 30,30,30
-        self.font = pygame.font.SysFont(None,48)
+        self.font = pygame.font.SysFont('SimHei',48)
         self.FPS = 60
         
         self.tank_max_speed = 2.6
         self.push_strength = 5
         self.tank_acc = 0.3
         self.friction_acc = 0.1
+        self.rotate_acc = 0.2
+        self.tank_max_rotate_speed = 2
         
         self.bullet_speed = 5
         self.bullet_width = 3

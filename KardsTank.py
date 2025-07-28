@@ -9,12 +9,13 @@ class KardsTank:
         '''初始化游戏'''
         pygame.init()
         self.settings = Settings()
+        self.font = self.settings.font
+        
         
         self.screen = pygame.display.set_mode(self.settings.screen_size)
         self.player1 = Tank(self,'Ger')
-        #self.player2 = Tank(self,'Eng')
-        #self.players = pygame.sprite.Group(self.player1,self.player2)
-        self.players = pygame.sprite.Group(self.player1)
+        self.player2 = Tank(self,'Eng')
+        self.players = pygame.sprite.Group(self.player1,self.player2)
         self.bullets = pygame.sprite.Group()
         pygame.display.set_caption("这个,,游戏。那。坦克,打4对面?对面。。是,你的机油?用wasd 上下左右。冻起来,然后j和,数字0打.")
         self.clock = pygame.time.Clock()
@@ -76,6 +77,8 @@ class KardsTank:
         self.bullets.update()
         self.players.update()
         self._update_bullet()
+        txt = self.font.render(f'剩余指挥点{self.player1.kredit},可移动毫秒数{self.player1.can_move_time}',True,(255,255,255))
+        self.screen.blit(txt,(100,100))
         pygame.display.flip()
         
         self.clock.tick(self.settings.FPS)

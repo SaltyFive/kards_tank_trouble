@@ -9,6 +9,7 @@ class Tank(pygame.sprite.Sprite):
         self.screen_rect = kt_game.screen.get_rect()
         self.settings = kt_game.settings
         self.game = kt_game
+        self.font = self.settings.font
         
         self.id = image
         self.origin_image = pygame.image.load(f'images/{image}.png').convert_alpha()
@@ -29,6 +30,8 @@ class Tank(pygame.sprite.Sprite):
         self.acc = self.settings.tank_acc
         self.speed = 0
         self.f_acc = self.settings.friction_acc
+        self.r_acc = self.settings.rotate_acc
+        self.r_max_speed = self.settings.tank_max_rotate_speed
         self.tank_collision = False
         self.is_moving = False
         self.is_rotating = False
@@ -45,7 +48,6 @@ class Tank(pygame.sprite.Sprite):
         self.dx = 0
         self.dy = 0
     def moving(self):
-        global acc
         if self.kredit > 0 and self.can_move_time <= 0:
             self.can_move_time += 300
             self.kredit -= 1
@@ -93,17 +95,32 @@ class Tank(pygame.sprite.Sprite):
         self.rect.y = int(self.y)
     def rotate(self):
         if self.turn_left and self.turn_right:
-            self.rotate_speed = 0
             self.is_rotating = False
+            if self.rotate_speed > 0.01:
+                r_acc = -self.f_acc
+            elif self.rotate_speed < 0.01:
+                r_acc = self.f_acc
+            else:
+                r_acc = 0
         elif self.turn_left and self.can_move_time > 0:
-            self.rotate_speed = 2
             self.is_rotating = True
+            r_acc = self.r_acc
         elif self.turn_right and self.can_move_time > 0:
-            self.rotate_speed = -2
             self.is_rotating = True
+            r_acc = -self.r_acc
         else:
-            self.rotate_speed = 0
             self.is_rotating = False
+            if self.rotate_speed > 0.01:
+                r_acc = -self.f_acc
+            elif self.rotate_speed < -0.01:
+                r_acc = self.f_acc
+            else:
+                r_acc = 0
+        self.rotate_speed += r_acc
+        if (self.rotate_speed < 0.01 or self.rotate_speed > -0.01) and r_acc == 0:
+            self.rotate_speed = 0
+        self.rotate_speed = max(min(self.rotate_speed,self.r_max_speed),-self.r_max_speed)
+        
         
         self.angle = (self.rotate_speed + self.angle) % 360
         self.image = pygame.transform.rotate(self.origin_image,self.angle)
@@ -113,7 +130,6 @@ class Tank(pygame.sprite.Sprite):
     def _update_kredit(self):
         if pygame.time.get_ticks() - self.k_timer >= 1000:
             self.k_timer = pygame.time.get_ticks()
-            print(self.speed,acc)
             if self.kredit < self.kredit_limit:
                 self.kredit += 1
     def _check_kredit(self):
