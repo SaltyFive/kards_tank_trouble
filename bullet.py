@@ -15,8 +15,9 @@ class Bullet(pygame.sprite.Sprite):
         self.create_time = pygame.time.get_ticks()
         self.rect = pygame.Rect(0,0,self.settings.bullet_width,self.settings.bullet_height)
         self.rect.center = belong_to.rect.center
-        self.rect.x += 10 * cos(radians(belong_to.angle))
-        self.rect.y -= 10 * sin(radians(belong_to.angle))
+        self.rect.x += 12 * cos(radians(belong_to.angle))
+        self.rect.y -= 12 * sin(radians(belong_to.angle))
+        self.alive = True
         
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)

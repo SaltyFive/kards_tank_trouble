@@ -9,6 +9,7 @@ class Tank(pygame.sprite.Sprite):
         self.screen_rect = kt_game.screen.get_rect()
         self.settings = kt_game.settings
         
+        self.id = image
         self.origin_image = pygame.image.load(f'images/{image}.png').convert_alpha()
         self.image = self.origin_image
         self.rect = self.image.get_rect()

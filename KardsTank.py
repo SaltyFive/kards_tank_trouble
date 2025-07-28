@@ -19,6 +19,7 @@ class KardsTank:
         self.clock = pygame.time.Clock()
     def _check_events(self):
         self._check_tanks_collision()
+        self._check_tank_bullets_collision()
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -71,8 +72,8 @@ class KardsTank:
             self.player2.turn_right = False
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
-        self.players.update()
         self.bullets.update()
+        self.players.update()
         self._update_bullet()
         pygame.display.flip()
         
@@ -85,6 +86,8 @@ class KardsTank:
             bullet.draw_bullet()
         for bullet in self.bullets.copy():
             if pygame.time.get_ticks() - bullet.create_time >= 3000:
+                bullet.alive = False
+            if bullet.alive == False:
                 self.bullets.remove(bullet)
     def run_game(self):
         '''开始游戏的函数'''
@@ -108,6 +111,17 @@ class KardsTank:
                     tank2.rect.y -= dy * self.settings.push_strength
                 else:
                     tank1.tank_collision,tank2.tank_collision = False,False
+    def _check_tank_bullets_collision(self):
+        for tank in self.players:
+            hits = pygame.sprite.spritecollide(tank,self.bullets,False)
+            for bullet in hits:
+                if bullet.belong_to != tank:
+                    print(f'玩家{tank.id}被{bullet.belong_to.id}击中')
+                    bullet.alive = False
+                elif pygame.time.get_ticks() - bullet.create_time > 200:
+                    print(f'玩家{tank.id}被自己击中')
+                    bullet.alive = False
+
 if __name__ == '__main__':
     kt = KardsTank()
     kt.run_game()
