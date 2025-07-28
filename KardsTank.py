@@ -12,8 +12,9 @@ class KardsTank:
         
         self.screen = pygame.display.set_mode(self.settings.screen_size)
         self.player1 = Tank(self,'Ger')
-        self.player2 = Tank(self,'Eng')
-        self.players = pygame.sprite.Group(self.player1,self.player2)
+        #self.player2 = Tank(self,'Eng')
+        #self.players = pygame.sprite.Group(self.player1,self.player2)
+        self.players = pygame.sprite.Group(self.player1)
         self.bullets = pygame.sprite.Group()
         pygame.display.set_caption("这个,,游戏。那。坦克,打4对面?对面。。是,你的机油?用wasd 上下左右。冻起来,然后j和,数字0打.")
         self.clock = pygame.time.Clock()
@@ -48,10 +49,10 @@ class KardsTank:
         elif event.key == pygame.K_RIGHT:
             self.player2.turn_right = True
                         
-        if event.key == pygame.K_j:
-            self._fire_bullet(self.player1)
-        if event.key == pygame.K_KP0:
-            self._fire_bullet(self.player2)
+        if event.key == pygame.K_j and self.player1.can_fire:
+            self.player1._fire_bullet()
+        if event.key == pygame.K_KP0 and self.player2.can_fire:
+            self.player2._fire_bullet()
     def _check_keyup(self,event):
         if event.key == pygame.K_w:
             self.player1.moving_forward = False

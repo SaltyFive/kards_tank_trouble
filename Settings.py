@@ -11,7 +11,7 @@ class Settings:
         self.font = pygame.font.SysFont(None,48)
         self.FPS = 60
         
-        self.tank_max_speed = 2
+        self.tank_max_speed = 2.6
         self.push_strength = 5
         self.tank_acc = 0.3
         self.friction_acc = 0.1
