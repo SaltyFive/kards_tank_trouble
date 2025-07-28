@@ -23,10 +23,13 @@ class Tank(pygame.sprite.Sprite):
         self.turn_left = False
         self.turn_right = False
         
-        self.velocity = 2
+        self.velocity = self.settings.tank_speed
+        self.tank_collision = False
                 
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
+        self.dx = 0
+        self.dy = 0
     def moving(self):
         if self.moving_forward and self.moving_backward:
             speed = 0
@@ -36,19 +39,21 @@ class Tank(pygame.sprite.Sprite):
             speed = self.velocity
         else:
             speed = 0
+        if self.tank_collision:
+            self.dx = (speed * cos(radians(self.angle)))/2
+            self.dy = (-(speed * sin(radians(self.angle))))/2
+        else:
+            self.dx = speed * cos(radians(self.angle))
+            self.dy = -(speed * sin(radians(self.angle)))
         
-        dx = speed * cos(radians(self.angle))
-        dy = -(speed * sin(radians(self.angle)))
-        
-        self.x += dx
-        self.y += dy
+        self.x += self.dx
+        self.y += self.dy
         
         self.x = max(0, min(self.x, self.screen_rect.width - self.rect.width))
         self.y = max(0, min(self.y, self.screen_rect.height - self.rect.height))
         
         self.rect.x = int(self.x)
         self.rect.y = int(self.y)
-        
     def rotate(self):
         if self.turn_left and self.turn_right:
             self.rotate_speed = 0

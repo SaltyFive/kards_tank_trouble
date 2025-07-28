@@ -13,13 +13,12 @@ class KardsTank:
         self.screen = pygame.display.set_mode(self.settings.screen_size)
         self.player1 = Tank(self,'Ger')
         self.player2 = Tank(self,'Eng')
-        self.players = pygame.sprite.Group()
-        self.players.add(self.player1)
-        self.players.add(self.player2)
+        self.players = pygame.sprite.Group(self.player1,self.player2)
         self.bullets = pygame.sprite.Group()
         pygame.display.set_caption("这个,,游戏。那。坦克,打4对面?对面。。是,你的机油?用wasd 上下左右。冻起来,然后j和,数字0打.")
         self.clock = pygame.time.Clock()
     def _check_events(self):
+        self._check_tanks_collision()
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -92,6 +91,23 @@ class KardsTank:
         while 1:
             self._check_events()
             self._update_screen()
+    def _check_tanks_collision(self):
+        for tank1 in self.players:
+            for tank2 in self.players:
+                if tank1 != tank2 and pygame.sprite.collide_rect(tank1,tank2):
+                    tank1.tank_collision,tank2.tank_collision = True,True
+                    dx = tank1.rect.centerx - tank2.rect.centerx
+                    dy = tank1.rect.centery - tank2.rect.centery
+                    if dx == 0 and dy == 0:
+                        dx, dy = 1, 0
+                    distance = max(1, (dx ** 2 + dy ** 2) ** 0.5)
+                    dx, dy = dx / distance, dy / distance
+                    tank1.rect.x += dx * self.settings.push_strength
+                    tank1.rect.y += dy * self.settings.push_strength
+                    tank2.rect.x -= dx * self.settings.push_strength
+                    tank2.rect.y -= dy * self.settings.push_strength
+                else:
+                    tank1.tank_collision,tank2.tank_collision = False,False
 if __name__ == '__main__':
     kt = KardsTank()
     kt.run_game()

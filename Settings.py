@@ -11,6 +11,9 @@ class Settings:
         self.font = pygame.font.SysFont(None,48)
         self.FPS = 60
         
+        self.tank_speed = 2
+        self.push_strength = 5
+        
         self.bullet_speed = 5
         self.bullet_width = 3
         self.bullet_height = 3
